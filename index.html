@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Факторы выдачи ипотеки по регионам России</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F6F9; --surface:#FFFFFF; --ink:#16212E; --muted:#5E6B7A; --line:#D9E0E7;
+  --accent:#0E5F7E; --accent-soft:#DCEBF1; --up:#23794A; --down:#B23838; --dot:#9BBB59; --hi:#E08A00; --ell:#C00000; --trend:#16212E;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#10161D; --surface:#18212B; --ink:#E5EBF1; --muted:#9AA8B6; --line:#2B3744;
+    --accent:#5CB6D6; --accent-soft:#1D3644; --up:#5CC08A; --down:#EF7B7B; --dot:#9BBB59; --hi:#FFB340; --ell:#F06A6A; --trend:#E5EBF1;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10161D; --surface:#18212B; --ink:#E5EBF1; --muted:#9AA8B6; --line:#2B3744;
+  --accent:#5CB6D6; --accent-soft:#1D3644; --up:#5CC08A; --down:#EF7B7B; --dot:#9BBB59; --hi:#FFB340; --ell:#F06A6A; --trend:#E5EBF1;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:32px 20px 48px}
+header h1{font-size:clamp(1.6rem,3.6vw,2.4rem);line-height:1.15;font-weight:700;margin:0 0 8px;letter-spacing:-.01em;max-width:22ch}
+header p{margin:0;color:var(--muted);max-width:70ch}
+section{margin-top:40px}
+h2{font-size:1.25rem;font-weight:600;margin:0 0 4px}
+.lead{color:var(--muted);margin:0 0 18px;max-width:70ch}
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:28px}
+.inputs{padding:24px;border-right:1px solid var(--line)}
+.result{padding:24px 28px}
+label.f{display:block;margin-bottom:20px}
+.f .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px}
+.f .name{font-weight:500}
+.f .val{font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent);white-space:nowrap}
+.f .hint{font-size:.82rem;color:var(--muted);margin-top:2px}
+select{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px;margin:0}
+button{font:inherit;cursor:pointer;border:1px solid var(--accent);background:transparent;color:var(--accent);padding:8px 14px;border-radius:8px}
+button:hover{background:var(--accent-soft)}
+button[aria-pressed="true"]{background:var(--accent);color:var(--surface)}
+:focus-visible{outline:3px solid var(--hi);outline-offset:2px}
+.big{font-size:clamp(3rem,8vw,4.6rem);font-weight:700;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.unit{color:var(--muted);margin-top:6px}
+.facts{margin:18px 0 0;padding:14px 0 0;border-top:1px solid var(--line);display:grid;gap:6px;font-variant-numeric:tabular-nums}
+.facts b{font-weight:600}
+.pos{color:var(--up)} .neg{color:var(--down)}
+.contrib{margin-top:22px}
+.contrib h3{font-size:.95rem;font-weight:600;margin:0 0 10px}
+.crow{display:grid;grid-template-columns:7.5rem 1fr 4.2rem;align-items:center;gap:10px;margin-bottom:8px;font-size:.92rem}
+.track{position:relative;height:14px;background:var(--bg);border-radius:3px}
+.track::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
+.bar{position:absolute;top:0;bottom:0;border-radius:3px}
+.cnum{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-variant-numeric:tabular-nums}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-weight:600;font-size:.88rem;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+.imp{display:flex;align-items:center;gap:10px}
+.imp span.b{display:block;height:10px;background:var(--accent);border-radius:2px}
+.scroll{overflow-x:auto}
+.toggle{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chartbox{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;height:420px;position:relative}
+footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+footer p{margin:0 0 6px;max-width:80ch}
+.eq{font-weight:600;color:var(--ink)}
+@media (max-width:760px){
+  .calc{grid-template-columns:1fr}
+  .inputs{border-right:0;border-bottom:1px solid var(--line)}
+  .chartbox{height:340px}
+  .crow{grid-template-columns:6.2rem 1fr 3.8rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Что определяет объём выдачи ипотеки в регионах России</h1>
+  <p>Модель построена по 85 субъектам РФ за 2025 год (данные Банка России и Росстата). Подставьте значения факторов или выберите регион, чтобы увидеть прогноз выдачи жилищных кредитов на одного жителя.</p>
+</header>
+
+<div class="calc">
+  <div class="inputs">
+    <label class="f">
+      <div class="top"><span class="name">Регион</span></div>
+      <select id="region"></select>
+    </label>
+    <label class="f">
+      <div class="top"><span class="name">Ставка по жилищным кредитам</span><span class="val" id="v1"></span></div>
+      <input type="range" id="x1" min="4" max="16" step="0.05">
+      <div class="hint">X1, средневзвешенная, % годовых</div>
+    </label>
+    <label class="f">
+      <div class="top"><span class="name">Среднемесячная зарплата</span><span class="val" id="v2"></span></div>
+      <input type="range" id="x2" min="40000" max="220000" step="500">
+      <div class="hint">X2, номинальная начисленная, руб.</div>
+    </label>
+    <label class="f">
+      <div class="top"><span class="name">Ввод жилья на 1000 жителей</span><span class="val" id="v4"></span></div>
+      <input type="range" id="x4" min="100" max="2100" step="10">
+      <div class="hint">X4, м² общей площади за год</div>
+    </label>
+    <button id="reset" type="button">Вернуть значения региона</button>
+  </div>
+  <div class="result" aria-live="polite">
+    <div class="name" style="color:var(--muted)">Прогноз выдачи жилищных кредитов</div>
+    <div class="big" id="pred"></div>
+    <div class="unit">тыс. руб. на одного жителя в год</div>
+    <div class="facts" id="facts"></div>
+    <div class="contrib">
+      <h3>Почему прогноз отличается от среднего по России (<span id="ybar"></span> тыс. руб.)</h3>
+      <div id="contrib"></div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <h2>Какие факторы важнее</h2>
+  <p class="lead">Корреляционный анализ и модель случайного леса дают один и тот же порядок: сильнее всего на выдачу влияет зарплата, затем ставка.</p>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Фактор</th><th>Коэффициент корреляции r</th><th>D = r², %</th><th>Связь</th><th>Важность в случайном лесе</th></tr></thead>
+    <tbody id="ftable"></tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>Регионы на корреляционном поле</h2>
+  <p class="lead">Те же корреляционные поля, что в расчётах Excel: точки – субъекты РФ, чёрная линия – линия тренда (парная регрессия) с уравнением и R², красный пунктир – эллипс рассеяния. Выбранный в калькуляторе регион выделен оранжевым.</p>
+  <div class="toggle" role="group" aria-label="Фактор по оси X" id="tg"></div>
+  <div class="chartbox"><canvas id="sc" aria-label="Корреляционное поле"></canvas></div>
+  <p class="lead" id="outside" style="margin-top:10px"></p>
+</section>
+
+<footer>
+  <p class="eq" id="eqn"></p>
+  <p>Итоговая модель множественной регрессии, R² = <span id="r2"></span>: она объясняет эту долю различий между регионами. Цена 1 м² (X3) в модель не входит, так как дублирует зарплату (r = 0,71).</p>
+  <p>Прогноз надёжен в пределах значений факторов, наблюдавшихся в 2025 году. Учебный проект: «Разработка математического и программного обеспечения для определения факторов, влияющих на объём выдачи ипотечных кредитов».</p>
+</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const D = {"rows": [["Белгородская область", "ЦФО", 1500.7, 26.74, 7.71, 73894.8, 104430.8, 537.0], ["Брянская область", "ЦФО", 1142.4, 21.2, 8.17, 65803.3, 88892.9, 409.6], ["Владимирская область", "ЦФО", 1309.9, 20.61, 8.53, 73116.8, 95075.5, 730.6], ["Воронежская область", "ЦФО", 2273.4, 25.1, 7.55, 75525.1, 108773.9, 849.7], ["Ивановская область", "ЦФО", 905.9, 18.9, 9.09, 57011.5, 86646.1, 608.2], ["Калужская область", "ЦФО", 1068.4, 25.27, 8.15, 83641.6, 110657.5, 986.2], ["Костромская область", "ЦФО", 566.3, 23.54, 8.25, 63037.9, 93341.4, 587.0], ["Курская область", "ЦФО", 1060.9, 28.85, 7.12, 75383.9, 92186.9, 807.8], ["Липецкая область", "ЦФО", 1116.3, 20.77, 8.22, 76336.6, 89796.6, 612.3], ["Московская область", "ЦФО", 8651.3, 40.29, 8.05, 116033.3, 196250.9, 1443.9], ["Орловская область", "ЦФО", 692.5, 22.29, 8.25, 63828.5, 90759.0, 506.4], ["Рязанская область", "ЦФО", 1082.2, 27.39, 7.77, 73136.7, 107350.0, 599.1], ["Смоленская область", "ЦФО", 864.0, 19.88, 8.68, 68372.1, 87291.1, 498.2], ["Тамбовская область", "ЦФО", 956.3, 18.93, 8.15, 62962.9, 79802.8, 448.9], ["Тверская область", "ЦФО", 1199.7, 22.26, 8.2, 72627.7, 98347.7, 724.6], ["Тульская область", "ЦФО", 1471.1, 27.33, 7.9, 83723.7, 108557.3, 681.8], ["Ярославская область", "ЦФО", 1187.6, 22.55, 8.07, 73758.9, 105823.4, 790.3], ["г. Москва", "ЦФО", 13149.8, 41.84, 8.69, 180796.3, 345143.8, 562.3], ["Республика Карелия", "СЗФО", 523.9, 23.68, 7.82, 81459.7, 134589.9, 649.2], ["Республика Коми", "СЗФО", 720.6, 26.04, 8.58, 95987.5, 112581.9, 315.6], ["Ненецкий автономный округ", "СЗФО", 42.2, 32.46, 7.5, 146472.1, 113966.3, 708.1], ["Архангельская область (без АО)", "СЗФО", 955.9, 38.95, 5.2, 90690.7, 122745.9, 477.2], ["Вологодская область", "СЗФО", 1121.4, 22.56, 8.49, 80669.0, 88384.5, 718.1], ["Калининградская область", "СЗФО", 1033.9, 33.26, 7.58, 76631.4, 119281.6, 1180.2], ["Ленинградская область", "СЗФО", 2035.8, 33.69, 7.56, 94184.8, 147507.2, 2072.8], ["Мурманская область", "СЗФО", 656.4, 33.72, 8.18, 125289.9, 95125.0, 148.1], ["Новгородская область", "СЗФО", 571.4, 19.98, 8.02, 72168.2, 88619.3, 702.7], ["Псковская область", "СЗФО", 581.1, 19.97, 8.02, 63334.4, 72874.5, 549.7], ["г. Санкт-Петербург", "СЗФО", 5597.8, 44.87, 7.58, 121277.6, 266683.5, 480.0], ["Республика Адыгея", "ЮФО", 500.6, 26.64, 6.61, 63769.7, 110308.9, 1200.4], ["Республика Калмыкия", "ЮФО", 266.8, 58.25, 8.16, 55993.8, 69181.8, 497.9], ["Республика Крым", "ЮФО", 1909.5, 15.38, 7.01, 63714.8, 153983.2, 765.2], ["Краснодарский край", "ЮФО", 5833.0, 30.24, 7.13, 76017.0, 148614.6, 1069.2], ["Астраханская область", "ЮФО", 946.4, 35.37, 6.97, 69203.0, 130094.6, 829.9], ["Волгоградская область", "ЮФО", 2453.9, 19.25, 7.96, 68351.0, 106310.3, 478.3], ["Ростовская область", "ЮФО", 4152.5, 30.1, 7.01, 70490.5, 123998.6, 665.6], ["г. Севастополь", "ЮФО", 561.4, 15.76, 7.7, 66465.7, 164909.2, 616.6], ["Республика Дагестан", "СКФО", 3232.2, 7.21, 7.83, 49859.7, 84040.1, 517.0], ["Республика Ингушетия", "СКФО", 527.2, 2.36, 14.91, 44590.9, 56073.5, 407.6], ["Кабардино-Балкарская Республика", "СКФО", 905.5, 11.08, 8.05, 52501.3, 65549.9, 709.5], ["Карачаево-Черкесская Республика", "СКФО", 468.3, 13.48, 9.14, 54705.8, 64753.0, 754.8], ["Республика Северная Осетия – Алания", "СКФО", 678.9, 17.98, 7.53, 53744.0, 75517.3, 694.2], ["Чеченская Республика", "СКФО", 1552.9, 3.84, 15.25, 46592.2, 77480.3, 1697.1], ["Ставропольский край", "СКФО", 2886.1, 21.38, 7.44, 63520.3, 103220.3, 647.7], ["Республика Башкортостан", "ПФО", 4064.3, 34.56, 8.13, 74224.8, 133114.1, 743.3], ["Республика Марий Эл", "ПФО", 669.8, 28.08, 7.78, 70315.9, 93838.1, 719.5], ["Республика Мордовия", "ПФО", 765.9, 23.08, 7.98, 67058.3, 94341.8, 404.8], ["Республика Татарстан", "ПФО", 4003.0, 39.3, 7.95, 89971.9, 169812.7, 878.1], ["Удмуртская Республика", "ПФО", 1434.6, 40.64, 7.41, 77374.7, 104135.2, 863.8], ["Чувашская Республика", "ПФО", 1167.1, 35.03, 8.02, 68287.1, 112295.1, 703.7], ["Пермский край", "ПФО", 2495.3, 32.82, 7.6, 83114.4, 129052.5, 705.7], ["Кировская область", "ПФО", 1129.9, 26.77, 7.74, 67159.7, 111215.9, 530.3], ["Нижегородская область", "ПФО", 3060.3, 24.29, 8.34, 80764.9, 156057.5, 574.2], ["Оренбургская область", "ПФО", 1828.7, 29.98, 8.16, 74012.1, 77558.4, 659.5], ["Пензенская область", "ПФО", 1236.1, 23.89, 7.63, 67290.3, 98112.4, 680.0], ["Самарская область", "ПФО", 3127.8, 20.9, 9.07, 76408.4, 122975.1, 533.6], ["Саратовская область", "ПФО", 2385.2, 17.1, 8.95, 67193.2, 90923.4, 460.0], ["Ульяновская область", "ПФО", 1172.8, 23.44, 8.22, 69465.3, 100501.0, 536.1], ["Курганская область", "УФО", 753.0, 26.0, 8.37, 72834.7, 91052.9, 574.1], ["Свердловская область", "УФО", 4222.7, 34.14, 7.99, 88963.6, 142119.7, 746.6], ["Ханты-Мансийский автономный округ – Югра", "УФО", 1759.4, 46.62, 7.7, 135541.4, 126305.1, 517.5], ["Ямало-Ненецкий автономный округ", "УФО", 516.0, 61.95, 7.33, 177531.2, 180261.9, 645.9], ["Тюменская область (без АО)", "УФО", 1615.4, 45.14, 7.14, 93728.0, 128775.9, 1827.4], ["Челябинская область", "УФО", 3395.8, 26.59, 8.35, 80705.7, 115963.0, 609.5], ["Республика Алтай", "СФО", 210.8, 21.97, 7.81, 72943.6, 160095.8, 1744.7], ["Республика Тыва", "СФО", 337.5, 47.49, 5.99, 75290.9, 131619.9, 1383.5], ["Республика Хакасия", "СФО", 528.2, 25.55, 7.39, 80131.4, 108715.7, 976.1], ["Алтайский край", "СФО", 2115.3, 21.62, 8.16, 63806.0, 119400.6, 417.1], ["Красноярский край", "СФО", 2846.1, 26.84, 7.83, 105460.0, 129176.6, 495.0], ["Иркутская область", "СФО", 2330.5, 25.07, 8.3, 95165.5, 133791.0, 830.4], ["Кемеровская область – Кузбасс", "СФО", 2547.7, 18.69, 8.52, 82763.1, 112992.1, 360.6], ["Новосибирская область", "СФО", 2789.5, 33.3, 7.77, 86075.9, 138165.8, 882.1], ["Омская область", "СФО", 1818.1, 24.56, 8.19, 73061.4, 127658.7, 505.9], ["Томская область", "СФО", 1043.4, 25.78, 7.69, 85761.1, 126956.3, 371.7], ["Республика Бурятия", "ДФО", 971.9, 50.6, 4.67, 83542.2, 109012.6, 581.6], ["Республика Саха (Якутия)", "ДФО", 1001.7, 52.71, 5.08, 139432.4, 150260.0, 807.9], ["Забайкальский край", "ДФО", 984.4, 39.07, 5.18, 99617.5, 153982.1, 421.9], ["Камчатский край", "ДФО", 288.9, 38.28, 7.11, 150389.4, 159517.3, 321.1], ["Приморский край", "ДФО", 1806.4, 42.23, 5.02, 96109.7, 171743.7, 766.6], ["Хабаровский край", "ДФО", 1278.1, 43.05, 5.72, 96909.0, 148967.9, 436.9], ["Амурская область", "ДФО", 750.1, 44.77, 4.93, 99036.5, 159148.0, 571.6], ["Магаданская область", "ДФО", 133.4, 45.44, 7.14, 177751.0, 156568.5, 118.8], ["Сахалинская область", "ДФО", 457.6, 51.31, 4.95, 147688.4, 154706.5, 876.4], ["Еврейская автономная область", "ДФО", 145.8, 25.26, 5.56, 90987.8, 107632.7, 269.7], ["Чукотский автономный округ", "ДФО", 48.0, 44.29, 8.45, 213756.8, 236905.7, 250.8]], "coef": [34.17770301, -3.41863494, 0.00020664, 0.00555602], "r2": 0.6494, "corr": {"X1": -0.5985, "X2": 0.6646, "X3": 0.5319, "X4": 0.0493}, "means": {"Y": 29.17, "X1": 7.7776, "X2": 85697.6682, "X3": 121893.5567, "X4": 696.9506}};
+const IMP = {X1:14.7, X2:72.3, X3:8.8, X4:4.2};
+const ELL = {"X1": [[5.0115, 33.2357], [4.9088, 35.9467], [4.8225, 38.6747], [4.7533, 41.399], [4.7016, 44.0987], [4.668, 46.7534], [4.6527, 49.3428], [4.6557, 51.8473], [4.677, 54.2477], [4.7166, 56.5259], [4.774, 58.6644], [4.8489, 60.647], [4.9406, 62.4587], [5.0486, 64.0855], [5.1718, 65.5152], [5.3096, 66.7368], [5.4606, 67.7411], [5.624, 68.5205], [5.7982, 69.0689], [5.9822, 69.3822], [6.1744, 69.458], [6.3734, 69.2958], [6.5776, 68.8968], [6.7856, 68.264], [6.9957, 67.4022], [7.2064, 66.3181], [7.416, 65.0198], [7.6229, 63.5172], [7.8256, 61.8217], [8.0225, 59.9464], [8.2122, 57.9054], [8.3931, 55.7142], [8.564, 53.3896], [8.7234, 50.9493], [8.8702, 48.4117], [9.0033, 45.7963], [9.1217, 43.1229], [9.2244, 40.4119], [9.3107, 37.6839], [9.38, 34.9596], [9.4316, 32.2599], [9.4652, 29.6052], [9.4806, 27.0158], [9.4776, 24.5113], [9.4562, 22.1109], [9.4167, 19.8327], [9.3592, 17.6942], [9.2844, 15.7116], [9.1926, 13.9], [9.0847, 12.2731], [8.9614, 10.8434], [8.8237, 9.6218], [8.6726, 8.6175], [8.5093, 7.8382], [8.335, 7.2897], [8.151, 6.9764], [7.9588, 6.9006], [7.7599, 7.0628], [7.5556, 7.4618], [7.3476, 8.0946], [7.1375, 8.9564], [6.9268, 10.0405], [6.7172, 11.3389], [6.5103, 12.8414], [6.3076, 14.5369], [6.1107, 16.4122], [5.921, 18.4533], [5.7401, 20.6444], [5.5693, 22.969], [5.4098, 25.4094], [5.263, 27.9469], [5.1299, 30.5623], [5.0115, 33.2357]], "X2": [[28905.8472, 3.6129], [25939.4009, 4.8694], [23578.945, 6.3404], [21842.4438, 8.0147], [20743.1133, 9.8796], [20289.32, 11.921], [20484.5176, 14.1232], [21327.2204, 16.4695], [22811.0149, 18.9421], [24924.6087, 21.5221], [27651.916, 24.1899], [30972.1804, 26.9252], [34860.1325, 29.7072], [39286.1828, 32.5147], [44216.6464, 35.3264], [49613.9994, 38.1208], [55437.1647, 40.8766], [61641.8245, 43.573], [68180.7576, 46.1893], [75004.1988, 48.7057], [82060.2176, 51.1031], [89295.1134, 53.3631], [96653.8243, 55.4686], [104080.346, 57.4035], [111518.1583, 59.1531], [118910.6548, 60.7042], [126201.5743, 62.0449], [133335.4285, 63.1649], [140257.9243, 64.0558], [146916.3774, 64.7109], [153260.113, 65.125], [159240.8514, 65.2951], [164813.0756, 65.2199], [169934.3776, 64.8998], [174565.7812, 64.3375], [178672.0386, 63.5371], [182221.8987, 62.5048], [185188.345, 61.2483], [187548.8009, 59.7773], [189285.302, 58.103], [190384.6325, 56.2381], [190838.4259, 54.1968], [190643.2283, 51.9945], [189800.5255, 49.6482], [188316.7309, 47.1756], [186203.1371, 44.5956], [183475.8299, 41.9278], [180155.5655, 39.1925], [176267.6134, 36.4105], [171841.5631, 33.603], [166911.0995, 30.7914], [161513.7465, 27.997], [155690.5812, 25.2411], [149485.9214, 22.5447], [142946.9883, 19.9284], [136123.547, 17.412], [129067.5283, 15.0146], [121832.6325, 12.7546], [114473.9216, 10.6492], [107047.3999, 8.7142], [99609.5876, 6.9646], [92217.091, 5.4135], [84926.1716, 4.0729], [77792.3174, 2.9528], [70869.8216, 2.0619], [64211.3685, 1.4069], [57867.6329, 0.9927], [51886.8945, 0.8226], [46314.6703, 0.8979], [41193.3683, 1.2179], [36561.9647, 1.7802], [32455.7073, 2.5806], [28905.8472, 3.6129]], "X3": [[26040.6008, 4.7346], [22092.4629, 6.1819], [19091.9212, 7.8357], [17061.8119, 9.6836], [16017.5851, 11.7113], [15967.1882, 13.9035], [16911.0046, 16.2435], [18841.8513, 18.7135], [21745.0335, 21.2946], [25598.4561, 23.9674], [30372.7924, 26.7113], [36031.7066, 29.5055], [42532.1311, 32.3288], [49824.5937, 35.1597], [57853.5944, 37.9765], [66558.0276, 40.758], [75871.6472, 43.4829], [85723.5712, 46.1304], [96038.8203, 48.6805], [106738.8893, 51.1137], [117742.3442, 53.4115], [128965.442, 55.5565], [140322.7683, 57.5322], [151727.8869, 59.3236], [163093.9979, 60.9172], [174334.5984, 62.3008], [185364.1407, 63.4638], [196098.6832, 64.3975], [206456.5297, 65.0946], [216358.8506, 65.55], [225730.2833, 65.7601], [234499.5055, 65.7233], [242599.7782, 65.4399], [249969.4535, 64.9121], [256552.4435, 64.1439], [262298.6478, 63.1412], [267164.3343, 61.9114], [271112.4723, 60.4642], [274113.0139, 58.8103], [276143.1233, 56.9625], [277187.35, 54.9348], [277237.747, 52.7426], [276293.9306, 50.4026], [274363.0838, 47.9326], [271459.9016, 45.3514], [267606.479, 42.6787], [262832.1428, 39.9348], [257173.2285, 37.1406], [250672.804, 34.3173], [243380.3414, 31.4864], [235351.3408, 28.6695], [226646.9076, 25.8881], [217333.2879, 23.1632], [207481.364, 20.5156], [197166.1148, 17.9655], [186466.0459, 15.5323], [175462.591, 13.2345], [164239.4931, 11.0896], [152882.1668, 9.1139], [141477.0483, 7.3224], [130110.9372, 5.7289], [118870.3367, 4.3453], [107840.7944, 3.1822], [97106.2519, 2.2486], [86748.4054, 1.5514], [76846.0845, 1.0961], [67474.6519, 0.886], [58705.4296, 0.9228], [50605.1569, 1.2061], [43235.4817, 1.7339], [36652.4917, 2.5021], [30906.2873, 3.5049], [26040.6008, 4.7346]], "X4": [[280.3746, 56.4243], [344.8014, 59.5425], [414.4633, 62.512], [488.8302, 65.3102], [567.336, 67.9157], [649.3833, 70.3088], [734.3477, 72.4712], [821.5825, 74.3865], [910.4238, 76.0401], [1000.1954, 77.4194], [1090.2143, 78.5139], [1179.7952, 79.3154], [1268.2564, 79.8175], [1354.9247, 80.0167], [1439.1404, 79.9113], [1520.2627, 79.5022], [1597.6741, 78.7924], [1670.7854, 77.7874], [1739.0404, 76.4948], [1801.9195, 74.9244], [1858.9441, 73.0883], [1909.6803, 71.0003], [1953.7419, 68.6764], [1990.7936, 66.1343], [2020.5534, 63.3933], [2042.7949, 60.4742], [2057.3487, 57.3993], [2064.1041, 54.192], [2063.0097, 50.8767], [2054.0738, 47.4786], [2037.3644, 44.0235], [2013.0086, 40.5379], [1981.1919, 37.0482], [1942.1565, 33.5809], [1896.1992, 30.1625], [1843.67, 26.819], [1784.9687, 23.5757], [1720.5418, 20.4575], [1650.8799, 17.488], [1576.5131, 14.6898], [1498.0072, 12.0843], [1415.9599, 9.6912], [1330.9956, 7.5288], [1243.7608, 5.6135], [1154.9195, 3.9599], [1065.1478, 2.5806], [975.129, 1.4861], [885.5481, 0.6846], [797.0868, 0.1825], [710.4186, -0.0167], [626.2028, 0.0887], [545.0806, 0.4978], [467.6692, 1.2076], [394.5578, 2.2126], [326.3028, 3.5052], [263.4238, 5.0756], [206.3992, 6.9117], [155.663, 8.9997], [111.6014, 11.3236], [74.5496, 13.8657], [44.7898, 16.6067], [22.5483, 19.5258], [7.9945, 22.6007], [1.2391, 25.808], [2.3336, 29.1233], [11.2695, 32.5214], [27.9789, 35.9765], [52.3346, 39.4621], [84.1513, 42.9518], [123.1868, 46.4191], [169.144, 49.8375], [221.6732, 53.181], [280.3746, 56.4243]]};
+const TR = {"X1": {"r": -0.5985223630417054, "b": -4.581079225864754, "a": 64.80002781056805}, "X2": {"r": 0.6646472973470777, "b": 0.0002441334316151687, "a": 8.248344615582877}, "X3": {"r": 0.5319435157846729, "b": 0.0001427566896329276, "a": 11.768889800368168}, "X4": {"r": 0.04925764596744863, "b": 0.001654328464735131, "a": 28.017025159609272}};
+const OUT = {"X1": "Чеченская Республика, Республика Ингушетия", "X2": "Чукотский автономный округ, Республика Калмыкия", "X3": "г. Москва, Республика Калмыкия", "X4": "Ленинградская область, Чеченская Республика"};
+const AX = {X1:{min:4,max:16,step:2,k:1,t:"X1 – ставка по жилищным кредитам, %"},X2:{min:0,max:250000,step:50000,k:1000,t:"X2 – среднемесячная зарплата, тыс. руб."},X3:{min:0,max:400000,step:50000,k:1000,t:"X3 – цена 1 м² на первичном рынке, тыс. руб."},X4:{min:0,max:2500,step:500,k:1,t:"X4 – ввод жилья на 1000 жителей, м²"}};
+const NAMES = {X1:"Ставка, %", X2:"Зарплата, руб.", X3:"Цена 1 м², руб.", X4:"Ввод жилья на 1000 жит., м²"};
+const SHORT = {X1:"Ставка", X2:"Зарплата", X3:"Цена 1 м²", X4:"Ввод жилья"};
+const [A,B1,B2,B4] = D.coef;
+const M = D.means;
+const regions = D.rows.map(r=>({name:r[0],fo:r[1],pop:r[2],Y:r[3],X1:r[4],X2:r[5],X3:r[6],X4:r[7]}));
+const nf = (v,d=0)=>v.toLocaleString("ru-RU",{minimumFractionDigits:d,maximumFractionDigits:d});
+const $ = id=>document.getElementById(id);
+const css = n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+const avgRegion = {name:"Средний регион", pop:regions.reduce((s,r)=>s+r.pop,0)/regions.length, Y:M.Y, X1:M.X1, X2:M.X2, X4:M.X4};
+const sel = $("region");
+sel.add(new Option("Средний регион (средние значения по 85 субъектам)", "-1"));
+[...regions].map((r,i)=>[r,i]).sort((a,b)=>a[0].name.localeCompare(b[0].name,"ru")).forEach(([r,i])=>sel.add(new Option(r.name, i)));
+
+function current(){ const i=+sel.value; return i<0?avgRegion:regions[i]; }
+function setSliders(r){
+  $("x1").value = Math.min(16,Math.max(4,r.X1));
+  $("x2").value = Math.min(220000,Math.max(40000,r.X2));
+  $("x4").value = Math.min(2100,Math.max(100,r.X4));
+}
+function predict(x1,x2,x4){ return A + B1*x1 + B2*x2 + B4*x4; }
+
+function render(){
+  const x1=+$("x1").value, x2=+$("x2").value, x4=+$("x4").value;
+  $("v1").textContent = nf(x1,2)+" %";
+  $("v2").textContent = nf(x2)+" ₽";
+  $("v4").textContent = nf(x4)+" м²";
+  const y = Math.max(0, predict(x1,x2,x4));
+  $("pred").textContent = nf(y,1);
+  const r = current(); const isAvg = +sel.value<0;
+  let h = "";
+  if(!isAvg){
+    const dev = (r.Y - predict(r.X1,r.X2,r.X4)) / predict(r.X1,r.X2,r.X4) * 100;
+    h += `<div>Фактическая выдача в 2025 г.: <b>${nf(r.Y,1)}</b> тыс. руб. на жителя</div>`;
+    h += `<div>Модель при фактических значениях региона: <b>${nf(predict(r.X1,r.X2,r.X4),1)}</b> (факт ${dev>=0?"выше":"ниже"} на <b class="${dev>=0?"pos":"neg"}">${nf(Math.abs(dev),0)}%</b>)</div>`;
+  }
+  h += `<div>При населении ${nf(r.pop,0)} тыс. чел. это ≈ <b>${nf(y*r.pop/1000,1)} млрд руб.</b> в год</div>`;
+  $("facts").innerHTML = h;
+  $("ybar").textContent = nf(predict(M.X1,M.X2,M.X4),1);
+  const parts = [["Ставка",B1*(x1-M.X1)],["Зарплата",B2*(x2-M.X2)],["Ввод жилья",B4*(x4-M.X4)]];
+  const maxAbs = Math.max(8,...parts.map(p=>Math.abs(p[1])));
+  $("contrib").innerHTML = parts.map(([n,v])=>{
+    const w = Math.abs(v)/maxAbs*50; const left = v>=0?50:50-w;
+    return `<div class="crow"><span>${n}</span><div class="track"><div class="bar" style="left:${left}%;width:${w}%;background:var(${v>=0?"--up":"--down"})"></div></div><span class="cnum ${v>=0?"pos":"neg"}">${v>=0?"+":"−"}${nf(Math.abs(v),1)}</span></div>`;
+  }).join("");
+  updateChart();
+}
+
+// factor table
+const rel = r=>{const a=Math.abs(r);const s=a>=.7?"сильная":a>=.5?"средняя":a>=.2?"слабая":a>=.09?"очень слабая":"практически отсутствует";return (a<.09?"":(r>0?"прямая, ":"обратная, "))+s;};
+$("ftable").innerHTML = ["X1","X2","X3","X4"].map(k=>{
+  const r=D.corr[k];
+  return `<tr><td>${SHORT[k]} (${k})</td><td>${nf(r,3)}</td><td>${nf(r*r*100,1)}</td><td>${rel(r)}</td><td><div class="imp"><span class="b" style="width:${IMP[k]*1.6}px"></span>${nf(IMP[k],1)}%</div></td></tr>`;
+}).join("");
+$("eqn").textContent = `y = ${nf(A,3)} − ${nf(Math.abs(B1),3)}·X1 + ${nf(B2,6)}·X2 + ${nf(B4,5)}·X4`;
+$("r2").textContent = nf(D.r2,3);
+
+// chart
+let factor="X1", chart=null;
+const tg=$("tg");
+["X1","X2","X3","X4"].forEach(k=>{const b=document.createElement("button");b.type="button";b.textContent=SHORT[k];b.setAttribute("aria-pressed",k===factor);b.onclick=()=>{factor=k;[...tg.children].forEach(c=>c.setAttribute("aria-pressed",c===b));updateChart(true);};tg.appendChild(b);});
+function linfit(xs,ys){const n=xs.length,mx=xs.reduce((a,b)=>a+b)/n,my=ys.reduce((a,b)=>a+b)/n;let sxy=0,sxx=0;for(let i=0;i<n;i++){sxy+=(xs[i]-mx)*(ys[i]-my);sxx+=(xs[i]-mx)**2;}const b=sxy/sxx;return [my-b*mx,b];}
+function excelNum(v){ let x=Number(v.toPrecision(5)); x=Math.round(x*1e4)/1e4; return x.toLocaleString("ru-RU",{maximumFractionDigits:4,useGrouping:false}).replace("-","−"); }
+function updateChart(){
+  if(typeof Chart==="undefined") return;
+  const xs=regions.map(r=>r[factor]), ys=regions.map(r=>r.Y);
+  const a=TR[factor].a, b=TR[factor].b, R2=TR[factor].r**2; const lo=Math.min(...xs), hi=Math.max(...xs);
+  const eqText = `y = ${excelNum(b)}x ${a<0?"−":"+"} ${excelNum(Math.abs(a))}    R² = ${excelNum(R2)}`;
+  const si=+sel.value;
+  const pts=regions.map(r=>({x:r[factor],y:r.Y,name:r.name}));
+  const hiPt = si>=0?[{x:regions[si][factor],y:regions[si].Y,name:regions[si].name}]:[];
+  const ax=AX[factor], ymax = factor==="X4"?80:70;
+  const tick=css("--muted"), grid=css("--line");
+  const ds=[
+    {type:"scatter",label:"Субъекты РФ",data:pts,backgroundColor:css("--dot"),borderColor:css("--dot"),pointStyle:"circle",pointRadius:4.5,pointHoverRadius:6,order:3},
+    {type:"line",label:"Линейная (Субъекты РФ)",data:[{x:lo,y:a+b*lo},{x:hi,y:a+b*hi}],borderColor:css("--trend"),backgroundColor:css("--trend"),borderWidth:1.5,pointRadius:0,pointStyle:"line",order:2},
+    {type:"line",label:"Эллипс",data:ELL[factor].map(p=>({x:p[0],y:p[1]})),borderColor:css("--ell"),borderWidth:2.5,borderDash:[9,6],pointRadius:0,tension:0,order:1},
+    {type:"scatter",label:"Выбранный регион",data:hiPt,backgroundColor:css("--hi"),borderColor:css("--ink"),borderWidth:1.5,pointRadius:8,order:0}
+  ];
+  const opts={responsive:true,maintainAspectRatio:false,animation:false,
+    plugins:{
+      title:{display:true,text:`Корреляционное поле: Y и ${factor} (с линией тренда)`,color:css("--ink"),font:{family:"Golos Text",size:16,weight:"600"}},
+      subtitle:{display:true,text:eqText,color:tick,font:{family:"Golos Text",size:13},padding:{bottom:8}},
+      legend:{position:"right",labels:{color:tick,font:{family:"Golos Text"},usePointStyle:true,sort:(x,y)=>x.datasetIndex-y.datasetIndex,filter:i=>i.text!=="Эллипс"&&!(i.text==="Выбранный регион"&&!hiPt.length)}},
+      tooltip:{filter:c=>c.dataset.label!=="Эллипс",callbacks:{label:c=>c.raw.name?`${c.raw.name}: ${nf(c.raw.y,1)} тыс. руб./чел.; ${SHORT[factor].toLowerCase()} ${nf(c.raw.x,factor==="X1"?2:0)}`:eqText}}},
+    scales:{x:{type:"linear",min:ax.min,max:ax.max,title:{display:true,text:ax.t,color:tick},ticks:{color:tick,stepSize:ax.step,callback:v=>nf(v/ax.k)},grid:{color:grid}},
+            y:{min:0,max:ymax,title:{display:true,text:"Y, тыс. руб./чел.",color:tick},ticks:{color:tick,stepSize:10},grid:{color:grid}}}};
+  if(chart){chart.data.datasets=ds;chart.options=opts;chart.update();}
+  else chart=new Chart($("sc"),{type:"scatter",data:{datasets:ds},options:opts});
+  $("outside").textContent = `Вне эллипса остались 2 точки: ${OUT[factor]}.`;
+}
+
+sel.onchange=()=>{setSliders(current());render();};
+["x1","x2","x4"].forEach(id=>$(id).addEventListener("input",render));
+$("reset").onclick=()=>{setSliders(current());render();};
+setSliders(avgRegion); render();
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if(chart){chart.destroy();chart=null;}updateChart();});
+</script>
+</body>
+</html>
